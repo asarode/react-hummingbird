@@ -1,13 +1,26 @@
 {
-  "name": "gulp.browserify",
-  "version": "1.0.0",
-  "description": "Browserify, Babel (6to5) & React example",
-  "main": "gulpfile.js",
+  "name": "react-hummingbird",
+  "version": "0.1.0",
+  "description": "React decorator that gives your component information about a Hummingbird (the anime site) user",
+  "main": "lib/hummingbird.js",
   "scripts": {
     "build": "babel -d lib/ src/",
     "prepublish": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asarode/react-hummingbird.git"
+  },
+  "keywords": [
+    "React",
+    "decorator",
+    "anime",
+    "data"
+  ],
+  "author": "asarode <sarodearjun57@gmail.com>",
   "license": "MIT",
+  "bugs": "https://github.com/asarode/react-hummingbird/issues",
+  "homepage": "https://github.com/asarode/react-hummingbird",
   "dependencies": {
     "bluebird": "^2.9.34",
     "humps": "^0.6.0",
