@@ -23,15 +23,23 @@ export default function hummingbird(component) {
    */
   function _fetchProfileInfo(username) {
     let _username = username || this.props.username;
+    // Prevents fetching the all users endpoint
+    if (_username.trim() === '') return;
     let base = 'https://hummingbird.me/api/v1';
     let url = `${base}/users/${_username}`;
+    this.setState({
+      hb: Object.assign(this.state.hb, {
+        loading: true
+      })
+    });
+
     request.get(url)
       .then(res => {
         let { body } = res;
         // Convert the fetched profile info to camelCase and save it to the
         // state object
         this.setState({
-          hb: humps.camelizeKeys(body)
+          hb: Object.assign(this.state.hb, humps.camelizeKeys(body))
         });
         // Fetch the favorite anime objects
         return Promise.map(body.favorites, fav => {
@@ -43,14 +51,32 @@ export default function hummingbird(component) {
         });
       })
       .then(favs => {
-        // Concert the fetched favorite anime info to camelCase and merge it
+        // Convert the fetched favorite anime info to camelCase and merge it
         // into the state object
         this.setState({
           hb: Object.assign(this.state.hb, {
             favorites: humps.camelizeKeys(favs)
           })
-        })
-      });
+        });
+      })
+      .catch(res => {
+        // Set the `hb.error` object with the error code and message
+        this.setState({
+          hb: Object.assign({}, _defaults, {
+            error: {
+              code: res.status,
+              message: res.message
+            }
+          })
+        });
+      })
+      .finally(() => {
+        this.setState({
+          hb: Object.assign(this.state.hb, {
+            loading: false
+          })
+        });
+      })
   }
 
   /**
@@ -58,6 +84,8 @@ export default function hummingbird(component) {
    * The default values for the profile information
    */
   let _defaults = {
+    loading: false,
+    error: {},
     about: '',
     avatar: '',
     bio: '',
@@ -84,15 +112,16 @@ export default function hummingbird(component) {
    * Will default to using the `_defaults` object, or it will merge in
    * the object returned from the base component's `setInitialHbState`
    * function.
-   *
    */
   function _setDefaults() {
-    let obj = {};
     if (component.prototype.setInitialHbState) {
-      obj = component.prototype.setInitialHbState();
+      // Change the value of `_defaults`
+      _defaults = Object.assign(_defaults,
+        component.prototype.setInitialHbState());
     }
+    // Make a copy of `_defaults` so it's not changed when state.hb is changed
     this.setState({
-      hb: Object.assign(_defaults, obj)
+      hb: Object.assign({}, _defaults)
     });
   }
 
