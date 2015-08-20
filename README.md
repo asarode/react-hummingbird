@@ -4,7 +4,7 @@ React decorator that gives your component information about a Hummingbird (the a
 ## Usage
 Install with `npm install react-hummingbird --save`
 
-Hummingbird will give your decorated component access to a user's [Hummingbird](hummingbird.me) profile information. Just decorate your class and include an initial username in the component's default props.
+Hummingbird will give your decorated component access to a user's [Hummingbird](https://hummingbird.me/) profile information. Just decorate your class and include an initial username in the component's default props.
 
 **!important:** When developing locally, your component will need to be served from port 4000 to access the Hummingbird API. The Hummingbird folks have their CORS headers set so only port 4000 works on localhost.
 
